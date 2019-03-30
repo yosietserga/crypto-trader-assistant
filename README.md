@@ -3,12 +3,12 @@ UI Assistant for crypto traders available for Binance, OKEx, ZB and others
 
 ## INSTALLATION
 
-Use this js code injecting it directly into the website, you can use chrome extension to do this.
-
+[<img src="http://pngimg.com/uploads/chrome_logo/chrome_logo_PNG30.png" width="100" />](https://chrome.google.com/webstore/detail/crypto-trader-assistant/gohgaliidhnkpanhibpmneeiijmndbba?hl=en)
+[<img src="https://www.freeiconspng.com/uploads/firefox-logo-icon-15.png" width="100" />](https://addons.mozilla.org/en-US/firefox/addon/huobi-global-trader-assistant/)
 
 ## HOW TO USE 
 
-After injects the script, it will shows you the assistant panel for the markets dashboard and trading 
+After install the extension, it will shows you the assistant panel for the markets dashboard and trading 
 
 
 ## SUGGESTIONS
@@ -17,7 +17,7 @@ Tell me what do you want to improve? which exchange do you want to include?
 
 ## INCOMING
 
-We are working in a browser extension for chrome and firefox, and if I'll do it well, the node app for desktops xD
+We are working in the node app for desktops xD
 
 
 ## DONATIONS (Help me to improve this faster)
