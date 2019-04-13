@@ -88,8 +88,8 @@ function initDashboardBTCTpl(s) {
     appendToMyWrapper(
         '<p class="monitorLoaded">' + lang['Time Interval'] + ': ' + s.interval + ' seconds</p>' +
         '<p>' + lang['Price Change'] + ' ' + lang['Min'] + ': ' + s.percentProfit + '%</p>' +
-        '<a href="' + getWithdrawalUrl() + '" target="_blank" style="font-size:12px;color:#fff;background:rgba(66, 244, 146,1);padding:5px;margin:10px;border:none;cursor:pointer;position:absolute;right:100px;text-transform:uppercase;line-height:16px;">' + lang['Improve'] + '</a>' +
-        '<button id="refreshButton" style="font-size:12px;color:#fff;background:#ffd170;padding:5px;margin:10px;border:none;cursor:pointer;position:absolute;right:10px;text-transform:uppercase;line-height:16px;">' + lang['Refresh'] + '</button>' +
+        '<a href="' + getWithdrawalUrl() + '" target="_blank" style="font-size:12px;color:#fff;background:rgba(66, 244, 146,1);padding:5px;margin:10px;border:none;cursor:pointer;position:absolute;right:100px;text-transform:uppercase;line-height:16px;top:10px;">' + lang['Improve'] + '</a>' +
+        '<button id="refreshButton" style="font-size:12px;color:#fff;background:#ffd170;padding:5px;margin:10px;border:none;cursor:pointer;position:absolute;right:10px;text-transform:uppercase;line-height:16px;top:10px;">' + lang['Refresh'] + '</button>' +
         '<div style="clear:both;float:none;width:100%;height:1px;display:block;border:solid 1px #000;"></div>'
     );
 
@@ -183,7 +183,7 @@ function runRichMaker(e) {
         let base = getBase();
         settings = {
             interval: 1,
-            percentProfit: 5,
+            percentProfit: 1,
             occurrences: 10,
             progreesive: false,
             dumpColor: 'rgba(244, 65, 65, 1)',
@@ -220,6 +220,13 @@ function tradingAssistantBTC() {
     let priceBTC = getExPrice();
     let code = getExSymbol();
 
+    if (empty(lastSymbol)) lastSymbol = code;
+    
+    if (lastSymbol != code) {
+        lastSymbol = code;
+        refresh();
+    }
+
     if (checkExLoaded()) {
         let base = getExBase();
         let percent = getExPercent();
@@ -247,12 +254,12 @@ function tradingAssistantBTC() {
         if (Object.keys(pLast).length === 0) {
             pLast[code] = pLast[code] || {};
             pLast[code].percentChange = percent;
-            pLast[code].priceBTC = parseFloat(priceBTC);
+            pLast[code].priceBTC = getFloat(priceBTC);
         } else {
             if (!pLast[code].percentChange) pLast[code].percentChange = percent;
-            if (!pLast[code].priceBTC) pLast[code].priceBTC = parseFloat(priceBTC);
-            if (!pLast[code].volumeBTC) pLast[code].volumeBTC = parseFloat(volumeBTC);
-            if (!pLast[code].volume) pLast[code].volume = parseFloat(vol);
+            if (!pLast[code].priceBTC) pLast[code].priceBTC = getFloat(priceBTC);
+            if (!pLast[code].volumeBTC) pLast[code].volumeBTC = getFloat(volumeBTC);
+            if (!pLast[code].volume) pLast[code].volume = getFloat(vol);
 
             var diff = percent - pLast[code].percentChange;
 
@@ -279,7 +286,7 @@ function tradingAssistantBTC() {
             }
             
             let volPercentChange = ((vol - pLast[code].volume) * 100 / pLast[code].volume).toFixed(2);
-            let volChange = (parseFloat(vol - pLast[code].volume) * parseFloat(priceBTC)).toFixed(8);
+            let volChange = (getFloat(vol - pLast[code].volume) * getFloat(priceBTC)).toFixed(8);
 
             tradingAssistantBTCTpl({
                 domId: '__' + code + '__',
@@ -356,7 +363,7 @@ function tradingAssistantBTCTpl(data) {
         '<div style="text-align:center;font-size:16px;">' + lang['Volume'] + ' ' + data.base + '</div>' +
         '<div style="text-align:center;font-size:14px;">24H ' + lang['Change'] + '</div>' +
         '<div style="text-align:center;color:[dumpColor]">' +
-        '<small style="text-align:center;font-size:10px;">' + parseFloat(data.volumeBTC) + ' (%' + data.volPercentDiff + ')</small>' +
+        '<small style="text-align:center;font-size:10px;">' + getFloat(data.volumeBTC) + ' (%' + data.volPercentDiff + ')</small>' +
         '</div>'
 
         +
@@ -365,7 +372,7 @@ function tradingAssistantBTCTpl(data) {
         +
         '<div style="text-align:center;font-size:14px;">' + lang['Since Opened'] + '</div>' +
         '<div style="text-align:center;color:[dumpColor]">' +
-        '<small style="text-align:center;font-size:10px;">' + parseFloat(data.volDiff) + ' (%' + data.volPercentDiff + ')</small>' +
+        '<small style="text-align:center;font-size:10px;">' + getFloat(data.volDiff) + ' (%' + data.volPercentDiff + ')</small>' +
         '</div>'
 
         +
@@ -546,10 +553,8 @@ async function makeMeRichBTC() {
 
     walkCurrencies(base);
     var rows = getRows(base);
-
     rows.forEach(row => {
         const { code } = getRowData(row);
-
         let actual = getActualChange(code);
         let last = getLastChange(code);
 
@@ -610,7 +615,7 @@ function makeMeRichTplBTC(data) {
         +
         ((data.base === 'usdt') ?
             '<div style="float:left;width:160px;text-align:center;">' +
-            '$' + parseFloat(data.priceBuyBTC) +
+            '$' + getFloat(data.priceBuyBTC) +
             '</div>' :
             '<div style="float:left;width:160px;text-align:center;">' +
             data.priceBuyBTC +
@@ -811,13 +816,13 @@ function addChange(data) {
     __cData[data.code].last.percentDiffProgressive = data.percentChange - __cData[data.code].last.percentChange;
 
     if (__cData[data.code].last.volumeBTC) {
-        let vDiff = parseFloat(data.volumeBTC) - parseFloat(pLast[data.code].volumeBTC);
-        let vDiffP = vDiff / parseFloat(data.volumeBTC) * 100;
+        let vDiff = getFloat(data.volumeBTC) - getFloat(pLast[data.code].volumeBTC);
+        let vDiffP = vDiff / getFloat(data.volumeBTC) * 100;
         __cData[data.code].actual.volumeDiff = vDiffP.toFixed(4);
 
 
-        vDiff = parseFloat(data.volumeBTC) - parseFloat(__cData[data.code].last.volumeBTC);
-        vDiffP = vDiff / parseFloat(data.volumeBTC) * 100;
+        vDiff = getFloat(data.volumeBTC) - getFloat(__cData[data.code].last.volumeBTC);
+        vDiffP = vDiff / getFloat(data.volumeBTC) * 100;
         __cData[data.code].actual.volumeDiffProgressive = vDiffP.toFixed(6);
     }
 
@@ -894,13 +899,11 @@ function getAVGChanges(code) {
 function walkCurrencies(base = 'btc') {
     var rows = getRows(base);
     var firstRun = false;
-
     if (Object.keys(pLast).length === 0) {
         firstRun = true;
     }
 
     rows.forEach(row => {
-        var parent = row.parentNode.querySelector('a');
         const {
             code,
             priceBTC,
@@ -908,7 +911,7 @@ function walkCurrencies(base = 'btc') {
             percent,
             volume
         } = getRowData(row);
-
+        
         if (firstRun && !pLast[code]) {
             pLast[code] = pLast[code] || {};
         }
@@ -919,17 +922,18 @@ function walkCurrencies(base = 'btc') {
             }
 
             if (typeof pLast[code].percentDiff == 'undefined') pLast[code].percentDiff = 0;
-            if (typeof pLast[code].percentChange == 'undefined' && !isNaN(priceBTC)) pLast[code].percentChange = parseFloat(percent);
-            if (typeof pLast[code].priceBTC == 'undefined' && !isNaN(priceBTC)) pLast[code].priceBTC = parseFloat(priceBTC);
-            if (typeof pLast[code].volumeBTC == 'undefined' && !isNaN(volume)) pLast[code].volumeBTC = parseFloat(volume);
-
+            if (typeof pLast[code].percentChange == 'undefined' && !isNaN(priceBTC)) pLast[code].percentChange = getFloat(percent);
+            if (typeof pLast[code].priceBTC == 'undefined' && !isNaN(priceBTC)) pLast[code].priceBTC = getFloat(priceBTC);
+            if (typeof pLast[code].volumeBTC == 'undefined' && !isNaN(volume)) pLast[code].volumeBTC = getFloat(volume);
+            console.log(code);
             renderTradeLink(row, code);
+
             addChange({
                 id: generateId(),
                 code: code,
                 priceBuyBTC: (priceBTC * 1).toFixed(8),
                 priceBuyUSD: (priceUSD * 1).toFixed(2),
-                volumeBTC: parseFloat(volume),
+                volumeBTC: getFloat(volume),
                 percentChange: percent * 1,
                 percentDiff: 0,
                 percentProfit: settings.percentProfit,
