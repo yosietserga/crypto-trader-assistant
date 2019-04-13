@@ -1,5 +1,7 @@
 'use strict';
 
+let lastSymbol = '';
+
 function bindEventsRichMaker() {
     let exchange = getExchangeName();
     if (exchange === 'hbg') {
@@ -230,7 +232,7 @@ function getRowData(r) {
         priceBTC = isset(r.children[2].children[0]) ? r.children[2].children[0].innerText : '';
         priceUSD = isset(r.children[2].children[1]) ? r.children[2].children[1].innerText.replace(/[^0-9.]/ig, '').trim() : '';
         percent = isset(r.children[3].children[0]) ? r.children[3].children[0].innerText.replace(/[^0-9.]/ig, '').trim() : '';
-        volume = (base === 'usdt') ? parseFloat(r.children[6].innerText.replace(',', '')) : parseFloat(r.children[6].innerText.replace(',', '')) * parseFloat(priceBTC);
+        volume = (base === 'usdt') ? getFloat(r.children[6].innerText) : getFloat(r.children[6].innerText) * getFloat(priceBTC);
     } else if (exchange === 'binance') {
         code = isset(r.children[1]) ? r.children[1].getAttribute('title') : '';
         priceBTC = isset(r.children[3].children[0].children[0]) ? r.children[3].children[0].children[0].innerText : '';
@@ -242,7 +244,7 @@ function getRowData(r) {
         priceBTC = isset(r.children[2].children[0]) ? r.children[2].children[0].innerText : '';
         priceUSD = '';
         percent = isset(r.children[3].children[0]) ? r.children[3].children[0].innerText.replace('%', '') : '';
-        volume = isset(r.children[6].children[0]) ? parseFloat(r.children[6].children[0].innerText.replace(/A-Za-z/ig, '')) * parseFloat(priceBTC) : '';
+        volume = isset(r.children[6].children[0]) ? getFloat(r.children[6].children[0].innerText.replace(/A-Za-z/ig, '')) * getFloat(priceBTC) : '';
     }
 
     return {
@@ -331,7 +333,7 @@ function getExVolumeQuoted() {
         let base = getExBase();
         let vol = getExVolume();
         let price = getExPrice();
-        return base === 'USDT' ? parseFloat(vol) : (parseFloat(vol) * parseFloat(price)).toFixed(8);
+        return base === 'USDT' ? getFloat(vol) : (getFloat(vol) * getFloat(price)).toFixed(8);
     } else if (exchange === 'binance') {
         return getExVolume();
     } else {
@@ -359,13 +361,13 @@ function getExTrades() {
         let sumP = 0;
         for (let i in allP) {
             if (typeof allP[i] != 'undefined' && !isNaN(allP[i]))
-                sumP = sumP * 1 + parseFloat(allP[i]) * 1;
+                sumP = sumP * 1 + getFloat(allP[i]) * 1;
         }
 
         let sumV = 0;
         for (let i in allV) {
             if (typeof allV[i] != 'undefined' && !isNaN(allV[i]))
-                sumV = sumV * 1 + parseFloat(allV[i]) * 1;
+                sumV = sumV * 1 + getFloat(allV[i]) * 1;
         }
 
         let avgT = 0;
@@ -391,17 +393,17 @@ function getExTrades() {
             	if (i==0) {
 		            lastTrade = {
 		                price: t.children[0].innerText,
-		                volume: (t.children[1].innerText * t.children[0].innerText).toFixed(10),
+                        volume: (getFloat(t.children[1].innerText) * getFloat(t.children[0].innerText)).toFixed(10),
 		                time: t.children[2].innerText
 		            };
             	}
                 let p = t.children[0].innerText;
-                let v = (t.children[1].innerText * t.children[0].innerText).toFixed(10);
+                let v = (getFloat(t.children[1].innerText) * getFloat(t.children[0].innerText)).toFixed(10);
                 let T = t.children[2].innerText;
 
                 if (v > minVol) {
-                    allP.push(parseFloat(p));
-                    allV.push(parseFloat(v));
+                    allP.push(getFloat(p));
+                    allV.push(getFloat(v));
                     allT.push(T);
                 }
             }
@@ -421,17 +423,17 @@ function getExTrades() {
             	if (i==0) {
 		            lastTrade = {
 		                price: t.children[0].innerText,
-		                volume: (t.children[1].innerText * t.children[0].innerText).toFixed(10),
+		                volume: (getFloat(t.children[1].innerText) * getFloat(t.children[0].innerText)).toFixed(8),
 		                time: t.children[2].innerText
 		            };
             	}
                 let p = t.children[0].innerText;
-                let v = (t.children[1].innerText * t.children[0].innerText).toFixed(10);
+                let v = (getFloat(t.children[1].innerText) * getFloat(t.children[0].innerText)).toFixed(8);
                 let T = t.children[2].innerText;
 
                 if (v > minVol) {
-                    allP.push(parseFloat(p));
-                    allV.push(parseFloat(v));
+                    allP.push(getFloat(p));
+                    allV.push(getFloat(v));
                     allT.push(T);
                 }
             }
@@ -461,8 +463,8 @@ function getExTrades() {
 	                let T = t.children[0].innerText;
 	
 	                if (v > minVol) {
-	                    allP.push(parseFloat(p));
-	                    allV.push(parseFloat(v));
+	                    allP.push(getFloat(p));
+	                    allV.push(getFloat(v));
 	                    allT.push(T);
 	                }
 	            }
