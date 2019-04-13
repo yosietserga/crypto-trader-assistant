@@ -26,6 +26,12 @@ function generateId() {
     return Math.floor((Math.random() * 1000000) + 1);
 }
 
+function getFloat(num) {
+    if (empty(num)) return 0;
+    if (typeof num == 'string' && num.find(',')) num = num.replace(',', '');
+    return parseFloat(num);
+}
+
 function empty(mixedVar) {
     //  discuss at: http://locutus.io/php/empty/
     // original by: Philippe Baumann
@@ -208,6 +214,7 @@ function appendToMyWrapper(str, id, attributes) {
     li.innerHTML = str;
     li.style.float = 'left';
     li.style.cursor = 'default';
+    li.style.position = 'relative';
     li.style.background = 'rgba(0, 0, 0, 0.3)';
     li.style.padding = '4px';
 
