@@ -12,6 +12,7 @@ let lastSort, order = false;
 let audio = new Audio('https://soundbible.com/grab.php?id=2218&type=mp3');
 
 function buymeabeer() {
+
     let url = getUrl();
     if (validateWithdrawalUrl()) {
 
@@ -183,7 +184,7 @@ function runRichMaker(e) {
         let base = getBase();
         settings = {
             interval: 1,
-            percentProfit: 1,
+            percentProfit: 4,
             occurrences: 10,
             progreesive: false,
             dumpColor: 'rgba(244, 65, 65, 1)',
@@ -214,6 +215,25 @@ function runRichMaker(e) {
         tradingAssistantBTC();
         setInterval(tradingAssistantBTC, 1000 * settings.interval);
     }
+}
+
+function loadJSON(filePath, success, error)
+{
+	var xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function()
+	{
+		if (xhr.readyState === XMLHttpRequest.DONE) {
+			if (xhr.status === 200) {
+				if (success)
+					success(JSON.parse(xhr.responseText));
+		} else {
+			if (error)
+				error(xhr);
+			}
+		}
+	};
+	xhr.open("GET", filePath, true);
+	xhr.send();
 }
 
 function tradingAssistantBTC() {
@@ -817,7 +837,7 @@ function addChange(data) {
 
     if (__cData[data.code].last.volumeBTC) {
         let vDiff = getFloat(data.volumeBTC) - getFloat(pLast[data.code].volumeBTC);
-        let vDiffP = vDiff / getFloat(data.volumeBTC) * 100;
+        let vDiffP = (pLast[data.code].volumeBTC) ? vDiff / getFloat(data.volumeBTC) * 100 : 0;
         __cData[data.code].actual.volumeDiff = vDiffP.toFixed(4);
 
 
@@ -825,7 +845,7 @@ function addChange(data) {
         vDiffP = vDiff / getFloat(data.volumeBTC) * 100;
         __cData[data.code].actual.volumeDiffProgressive = vDiffP.toFixed(6);
     }
-
+    
     __cData[data.code].historic[data.id] = __cData[data.code].actual;
 }
 
@@ -925,7 +945,7 @@ function walkCurrencies(base = 'btc') {
             if (typeof pLast[code].percentChange == 'undefined' && !isNaN(priceBTC)) pLast[code].percentChange = getFloat(percent);
             if (typeof pLast[code].priceBTC == 'undefined' && !isNaN(priceBTC)) pLast[code].priceBTC = getFloat(priceBTC);
             if (typeof pLast[code].volumeBTC == 'undefined' && !isNaN(volume)) pLast[code].volumeBTC = getFloat(volume);
-            console.log(code);
+            
             renderTradeLink(row, code);
 
             addChange({
