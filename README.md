@@ -1,9 +1,22 @@
 # crypto-trader-assistant
 UI Assistant for crypto traders available for Binance, OKEx, ZB and others. Developed by [Necoyoad](https://www.necoyoad.com)
 
+## SHARE
+
+[<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Facebook_logo_%28square%29.png/480px-Facebook_logo_%28square%29.png" width="50" />](https://www.facebook.com/sharer/sharer.php?u=https://github.com/yosietserga/crypto-trader-assistant/)
+[<img src="https://cdn.pixabay.com/photo/2014/04/03/11/53/twitter-312464_960_720.png" width="50" />](https://twitter.com/home?status=https://github.com/yosietserga/crypto-trader-assistant/ Hi! I'd like to show you my Crypto Trader Assistant Chrome extension, is FREE!)
+[<img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" width="50" />](https://www.linkedin.com/shareArticle?mini=true&url=https://github.com/yosietserga/crypto-trader-assistant/&title=&summary=Hi! I'd like to show you my Crypto Trader Assistant Chrome extension, is FREE!&source=)
+[<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Pinterest_Shiny_Icon.svg/1024px-Pinterest_Shiny_Icon.svg.png" width="50" />](https://pinterest.com/pin/create/button/?url=https://github.com/yosietserga/crypto-trader-assistant/&media=&description=Hi! I'd like to show you my Crypto Trader Assistant Chrome extension, is FREE!)
+
+## PREVIEW TRADE PANEL
+[![](http://img.youtube.com/vi/UJB5LbmFhf0/0.jpg)](http://www.youtube.com/watch?v=UJB5LbmFhf0 "Preview")
+
+## PREVIEW MARKETS PANEL
+[![](http://img.youtube.com/vi/dG457McYWFQ/0.jpg)](http://www.youtube.com/watch?v=dG457McYWFQ "Preview")
+
 ## INSTALLATION
 
-[<img src="http://pngimg.com/uploads/chrome_logo/chrome_logo_PNG30.png" width="100" />](https://chrome.google.com/webstore/detail/crypto-trader-assistant/gohgaliidhnkpanhibpmneeiijmndbba?hl=en)
+[<img src="http://pngimg.com/uploads/chrome_logo/chrome_logo_PNG30.png" width="100" />](https://chrome.google.com/webstore/detail/gohgaliidhnkpanhibpmneeiijmndbba?hl=en)
 [<img src="https://www.freeiconspng.com/uploads/firefox-logo-icon-15.png" width="100" />](https://addons.mozilla.org/en-US/firefox/addon/huobi-global-trader-assistant/)
 
 ## HOW TO USE 
