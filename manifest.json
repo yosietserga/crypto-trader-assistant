@@ -1,6 +1,6 @@
 {
-  "name": "Crypto Trader Assistant",
-  "version": "1.0.1",
+  "name": "Necoyoad Crypto Trader Assistant",
+  "version": "1.0.3",
   "description": "UI Assistant for Binance, Huobi, BW, ZB and others international exchangers",
   "permissions": ["activeTab", "declarativeContent", "storage"],
   "page_action": {
