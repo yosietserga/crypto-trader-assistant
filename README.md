@@ -4,9 +4,9 @@ UI Assistant for crypto traders available for Binance, OKEx, ZB and others. Deve
 ## SHARE
 
 [<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Facebook_logo_%28square%29.png/480px-Facebook_logo_%28square%29.png" width="50" />](https://www.facebook.com/sharer/sharer.php?u=https://github.com/yosietserga/crypto-trader-assistant/)
-[<img src="https://cdn.pixabay.com/photo/2014/04/03/11/53/twitter-312464_960_720.png" width="50" />](https://twitter.com/home?status=https://github.com/yosietserga/crypto-trader-assistant/ Hi! I'd like to show you my Crypto Trader Assistant Chrome extension, is FREE!)
-[<img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" width="50" />](https://www.linkedin.com/shareArticle?mini=true&url=https://github.com/yosietserga/crypto-trader-assistant/&title=&summary=Hi! I'd like to show you my Crypto Trader Assistant Chrome extension, is FREE!&source=)
-[<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Pinterest_Shiny_Icon.svg/1024px-Pinterest_Shiny_Icon.svg.png" width="50" />](https://pinterest.com/pin/create/button/?url=https://github.com/yosietserga/crypto-trader-assistant/&media=&description=Hi! I'd like to show you my Crypto Trader Assistant Chrome extension, is FREE!)
+[<img src="https://cdn.pixabay.com/photo/2014/04/03/11/53/twitter-312464_960_720.png" width="50" />](https://twitter.com/home?status=https://github.com/yosietserga/crypto-trader-assistant/)
+[<img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" width="50" />](https://www.linkedin.com/shareArticle?mini=true&url=https://github.com/yosietserga/crypto-trader-assistant/)
+[<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Pinterest_Shiny_Icon.svg/1024px-Pinterest_Shiny_Icon.svg.png" width="50" />](https://pinterest.com/pin/create/button/?url=https://github.com/yosietserga/crypto-trader-assistant/)
 
 ## PREVIEW TRADE PANEL
 [![](http://img.youtube.com/vi/UJB5LbmFhf0/0.jpg)](http://www.youtube.com/watch?v=UJB5LbmFhf0 "Preview")
