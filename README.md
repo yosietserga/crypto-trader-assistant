@@ -1,5 +1,5 @@
 # crypto-trader-assistant
-UI Assistant for crypto traders available for Binance, OKEx, ZB and others
+UI Assistant for crypto traders available for Binance, OKEx, ZB and others. Developed by [Necoyoad](https://www.necoyoad.com)
 
 ## INSTALLATION
 
