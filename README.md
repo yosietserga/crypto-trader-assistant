@@ -35,19 +35,11 @@ We are working in the node app for desktops xD
 
 ## DONATIONS (Help me to improve this faster)
 
-BTC     1FgpJpTHDuBgSe1CrTQE6HYR1xSJDn6ZsM
+BTC     1G7kX3WNX72PmjvGhxZL1XUA9CtdPMbA98
 
-DASH    XsLzYmqeDmW135a8kXU5ALS4M3B3gREyJ6
+ETH     0x13bf6c527c19041fc6c099fa760e8fc6924f8dee
 
-ETH     0x0A34857AC57976846D62F58E68bfB2B5eb9e6732
-
-LTC     LdQB3fPacYpZBGGg7QDsaqiY31E5g5RQyn
-
-BCH     1AaZbaKhcFvpzks3UKjyECnUzNLf4NS5hu
-
-BTG     GJ8vC45q7CqgtsV9pkdAwbXhpFYx5A2SRt
-
-XRP     rKfzfrk1RsUxWmHimWyNwk8AoWHoFneu4m      XRP TAG 1970342557
+XRP     rf7qtfHTAGrkxfDfZFmD4kKJaT4otefgo3      XRP TAG 101238
 
 
 ## DISCLAIMER
