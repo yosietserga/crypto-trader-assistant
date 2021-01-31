@@ -4,7 +4,7 @@ let lastSymbol = '';
 
 function bindEventsRichMaker() {
     let exchange = getExchangeName();
-    if (exchange === 'hbg') {
+    if (exchange === 'huobi') {
 		window.addEventListener("hashchange", function(e) {
 		    refresh();
 		    runRichMaker();
@@ -44,8 +44,8 @@ function bindEventsRichMaker() {
 
 function getWithdrawalUrl() {
     let exchange = getExchangeName();
-    if (exchange === 'hbg') {
-        return 'https://www.hbg.com/' + hl + '/finance';
+    if (exchange === 'huobi') {
+        return 'https://www.huobi.com/' + hl + '/finance';
     } else if (exchange === 'binance') {
         return 'https://www.binance.com/en/usercenter/wallet/withdrawals/BTC';
     } else if (exchange === 'zb') {
@@ -58,10 +58,10 @@ function getWithdrawalUrl() {
 function validateWithdrawalUrl() {
     let exchange = getExchangeName();
     let url = getUrl();
-    if (exchange === 'hbg') {
+    if (exchange === 'huobi') {
         return url.find('/finance');
     } else if (exchange === 'binance') {
-        return url.find('userCenter/withdrawal') || url.find('usercenter/wallet/withdrawals');
+        return url.find('/wallet/');
     } else if (exchange === 'zb') {
         return url.find('/asset/payout');//TODO: get withdrawal url
     } else if (exchange === 'fatbtc') {
@@ -73,7 +73,7 @@ function validateWithdrawalUrl() {
 
 function getStyleRGBA() {
     let exchange = getExchangeName();
-    if (exchange === 'hbg') {
+    if (exchange === 'huobi') {
         return 'rgba(30, 41, 67, 0.93)';
     } else if (exchange === 'binance') {
         return 'rgba(34, 34, 34, 0.93)';
@@ -84,7 +84,7 @@ function getStyleRGBA() {
 
 function getStyleTop() {
     let exchange = getExchangeName();
-    if (exchange === 'hbg') {
+    if (exchange === 'huobi') {
         return '5px';
     } else if (exchange === 'binance') {
         return '5px';
@@ -99,7 +99,7 @@ function getStyleTop() {
 
 function getStyleLeft() {
     let exchange = getExchangeName();
-    if (exchange === 'hbg') {
+    if (exchange === 'huobi') {
         return '10px';
     } else if (exchange === 'binance') {
         return '10px';
@@ -116,8 +116,8 @@ function getStyleLeft() {
 function validateDashboardUrl() {
     let exchange = getExchangeName();
     let url = getUrl();
-    if (exchange === 'hbg') {
-        return url.find('/markets') && (url.find('#btc') || url.find('#eth') || url.find('#usdt'));
+    if (exchange === 'huobi') {
+        return url.find('/markets');
     } else if (exchange === 'binance') {
         return url.find('/markets');
     } else if (exchange === 'zb') {
@@ -137,10 +137,10 @@ function validateDashboardUrl() {
 function getBase() {
     let exchange = getExchangeName();
     let url = getUrl();
-    if (exchange === 'hbg') {
+    if (exchange === 'huobi') {
         return url.find('#eth') ? 'eth' : url.find('#usdt') ? 'usdt' : 'btc';
     } else if (exchange === 'binance') {
-        let tabActive = document.querySelector('.wkcv3t-9.hynYiH');
+        let tabActive = document.querySelector('.css-10tphb7');
         return tabActive.innerText.replace(' Markets', '').toLowerCase();
     } else if (exchange === 'zb') {
         let tabActive = document.querySelector('#marketData .tab.active');
@@ -158,10 +158,10 @@ function getRows(b) {
 
     if (!validateDashboardUrl()) return false;
 
-    if (exchange === 'hbg') {
-        return document.querySelectorAll('#symbol_list dd');
+    if (exchange === 'huobi') {
+        return document.querySelectorAll('.exchange-market-wrap .table-wrap dd');
     } else if (exchange === 'binance') {
-        return document.querySelectorAll('.ReactVirtualized__Table__row');
+        return document.querySelectorAll('.window-scroller-override > div > .css-4cffwv');
     } else if (exchange === 'zb') {
         return document.querySelectorAll('#marketData .data-table .tbody .tr');
     } else if (exchange === 'fatbtc') {
@@ -176,9 +176,9 @@ function getTradeUrl(code) {
 
     if (!validateDashboardUrl()) return false;
 
-    if (exchange === 'hbg') {
+    if (exchange === 'huobi') {
         let base = getBase();
-        return 'https://www.hbg.com/' + hl + '/exchange/?s=' + code.replace(base, '_' + base);
+        return 'https://www.huobi.com/' + hl + '/exchange/?s=' + code.replace(base, '_' + base);
     } else if (exchange === 'binance') {
         return 'https://www.binance.com/' + hl + '/trade/pro/' + code.replace('/', '_');
     } else if (exchange === 'zb') {
@@ -196,19 +196,21 @@ function renderTradeLink(row, code) {
 
     if (!validateDashboardUrl()) return false;
 
-    if (exchange === 'hbg') {
+    if (exchange === 'huobi') {
         if (!document.querySelector('#exchangeTo' + code)) {
             let link = document.createElement('a');
             link.id = 'exchangeTo' + code;
             link.setAttribute('href', getTradeUrl(code));
             link.setAttribute('target', '_blank');
             link.innerText = 'Trade';
-            row.children[1].appendChild(link);
+            row.children[0].children[0].appendChild(link);
         }
     } else if (exchange === 'binance') {
+        /*
         let parent = row.parentNode.querySelector('a');
         parent.setAttribute('href', getTradeUrl(code));
         parent.setAttribute('target', '_blank');
+         */
     } else if (exchange === 'zb') {
     	//nothing to do 
     } else {
@@ -223,19 +225,19 @@ function getRowData(r) {
 
     if (!validateDashboardUrl()) return false;
 
-    if (exchange === 'hbg') {
+    if (exchange === 'huobi') {
         let base = getBase();
-        code = isset(r) ? r.getAttribute('data-symbol') : '';
-        priceBTC = isset(r.children[2].children[0]) ? r.children[2].children[0].innerText : '';
-        priceUSD = isset(r.children[2].children[1]) ? r.children[2].children[1].innerText.replace(/[^0-9.]/ig, '').trim() : '';
-        percent = isset(r.children[3].children[0]) ? r.children[3].children[0].innerText.replace(/[^0-9.]/ig, '').trim() : '';
-        volume = (base === 'usdt') ? getFloat(r.children[6].innerText) : getFloat(r.children[6].innerText) * getFloat(priceBTC);
+        code = isset(r) ? r.getAttribute('id') : '';
+        priceBTC = isset(r.children[0].children[1]) ? getImmediateText(r.children[0].children[1]).replace(/[^0-9.]/ig, '') : '';
+        priceUSD = isset(r.children[0].children[1].children[0]) ? r.children[0].children[1].children[0].innerText.replace(/[^0-9.]/ig, '').trim() : '';
+        percent = isset(r.children[0].children[2]) ? r.children[0].children[2].innerText.replace(/[^0-9.]/ig, '').trim() : '';
+        volume = getFloat(r.children[0].children[6].innerText.replace(/[^0-9.]/ig, ''));
     } else if (exchange === 'binance') {
-        code = isset(r.children[1]) ? r.children[1].children[0].children[0].innerText.replace(/\s/g, '') + r.children[1].children[0].children[1].innerText.replace(/\s/g, '') : '';
-        priceBTC = isset(r.children[3].children[0].children[0]) ? r.children[3].children[0].children[0].innerText : '';
-        priceUSD = isset(r.children[3].children[0].children[1]) ? r.children[3].children[0].children[1].innerText.replace('/ $', '') : '';
-        percent = isset(r.children[4].children[0]) ? r.children[4].children[0].innerText.replace('%', '') : '';
-        volume = isset(r.children[8]) ? r.children[8].innerText : '';
+        code = isset(r.children[0]) ? r.children[0].children[1].children[1].children[0].innerText.replace(/\s/g, '') + r.children[0].children[1].children[1].children[1].innerText.replace(/[\/\s]/ig, '') : '';
+        priceBTC = isset(r.children[0].children[2].children[0]) ? r.children[0].children[2].children[0].innerText.replace(/[^0-9.]/ig,'') : '';
+        priceUSD = isset(r.children[0].children[2].children[1]) ? r.children[0].children[2].children[1].innerText.replace(/\/\s$/g, '') : '';
+        percent = isset(r.children[0].children[3]) ? r.children[0].children[3].innerText.replace('%', '') : '';
+        volume = isset(r.children[0].children[7]) ? getFloat(r.children[0].children[7].innerText.replace(/[^0-9.]/ig,'') * priceBTC).toFixed(2) : '';
     } else if (exchange === 'zb') {
         code = isset(r.children[1]) ? r.children[0].children[0].children[1].innerText + r.children[0].children[0].children[2].innerText.replace(' / ', '/') : '';
         priceBTC = isset(r.children[2].children[0]) ? r.children[2].children[0].innerText : '';
@@ -257,10 +259,10 @@ function getRowData(r) {
 function validateTradeUrl() {
     let exchange = getExchangeName();
     let url = getUrl();
-    if (exchange === 'hbg') {
+    if (exchange === 'huobi') {
         return url.find('/exchange');
     } else if (exchange === 'binance') {
-        return url.find('/trade/pro');
+        return url.find('/trade/');
     } else if (exchange === 'zb') {
         return url.find('/trade/kline') || url.find('/markets');
     } else {
@@ -273,11 +275,12 @@ function getExPrice() {
 
     if (!validateTradeUrl()) return false;
 
-    if (exchange === 'hbg') {
+    if (exchange === 'huobi') {
         return document.querySelector('.price-container .price').innerText.trim();
     } else if (exchange === 'binance') {
-        let el = document.querySelectorAll('.ibuANF');
-        return isset(el[0].children[0].children[1].children[0]) ? el[0].children[0].children[1].children[0].innerText : false;
+        let el = document.querySelectorAll('.css-8t380c');
+        let c = el[0].childNodes;
+        return isset(c[0]) ? c[0].innerText.replace(/[^0-9.]/ig, '') : false;
     } else if (exchange === 'zb') {
         return document.querySelector('.coin-price').innerText.trim();
     } else {
@@ -290,11 +293,12 @@ function getExPercent() {
 
     if (!validateTradeUrl()) return false;
 
-    if (exchange === 'hbg') {
+    if (exchange === 'huobi') {
         return document.querySelector('.change').innerText.replace(/[^0-9.]/ig, '').trim();
     } else if (exchange === 'binance') {
-        let el = document.querySelectorAll('.ibuANF');
-        return el[0].children[1].children[1].children[1].innerText.replace(/[\+\-%]/g, '').trim();
+        let el = document.querySelectorAll('.css-dq9fy2');
+        let c = Array.from(el)[0].innerText.split(' ');
+        return isset(c[1]) ? c[1].replace(/[\+\-%]/g, '').trim() : false;
     } else if (exchange === 'zb') {
         let p = document.querySelector('.coin-price-item').children[0].children[1].innerText;
         return p.replace(/[\+\-%]/g, '').trim();
@@ -308,11 +312,11 @@ function getExVolume() {
 
     if (!validateTradeUrl()) return false;
 
-    if (exchange === 'hbg') {
+    if (exchange === 'huobi') {
         return document.querySelector('.ticker > .amount > dd').innerText.replace(/[^0-9.]/ig, '').trim();
     } else if (exchange === 'binance') {
-        let el = document.querySelectorAll('.ibuANF');
-        return el[0].children[4].children[1].innerText.replace(/[A-Z,]/g, '').trim();
+        let el = document.querySelectorAll('.css-dq9fy2');
+        return Array.from(el)[0].innerText.replace(/[^0-9.]/ig, '').trim();
     } else if (exchange === 'zb') {
         let v = document.querySelector('.coin-price-item').children[3].children[1].innerText;
         return v.find('K') ? v.replace('K','') * 1000 : v.replace('K','');
@@ -326,7 +330,7 @@ function getExVolumeQuoted() {
 
     if (!validateTradeUrl()) return false;
 
-    if (exchange === 'hbg' || exchange === 'zb') {
+    if (exchange === 'huobi' || exchange === 'zb') {
         let base = getExBase();
         let vol = getExVolume();
         let price = getExPrice();
@@ -381,62 +385,77 @@ function getExTrades() {
         return avgTrades;
     };
     
-    if (exchange === 'hbg') {
+    if (exchange === 'huobi') {
         let trades = document.querySelectorAll('.market-trades .mod-body p');
-        
+        let buying=0;
+        let selling=0;
         for (let i in trades) {
+            if (isNaN(i)) continue;
             let t = trades[i];
-            if (typeof t === 'object') {
-            	if (i==0) {
-		            lastTrade = {
-		                price: t.children[0].innerText,
-                        volume: (getFloat(t.children[1].innerText) * getFloat(t.children[0].innerText)).toFixed(10),
-		                time: t.children[2].innerText
-		            };
-            	}
-                let p = t.children[0].innerText;
-                let v = (getFloat(t.children[1].innerText) * getFloat(t.children[0].innerText)).toFixed(10);
-                let T = t.children[2].innerText;
+            if (i==0) {
+                lastTrade = {
+                    price: t.children[0].innerText,
+                    volume: (getFloat(t.children[1].innerText) * getFloat(t.children[0].innerText)).toFixed(10),
+                    time: t.children[2].innerText
+                };
+            }
+            let p = t.children[0].innerText;
+            let v = (getFloat(t.children[1].innerText) * getFloat(t.children[0].innerText)).toFixed(10);
+            let T = t.children[2].innerText;
 
-                if (v > minVol) {
-                    allP.push(getFloat(p));
-                    allV.push(getFloat(v));
-                    allT.push(T);
-                }
+            if (v > minVol) {
+                allP.push(getFloat(p));
+                allV.push(getFloat(v));
+                allT.push(T);
+            }
+            if (t.children[0].classList[1] == 'color-buy') {
+                buying = buying*1 + getFloat(p).toFixed(2)*getFloat(v).toFixed(2)*1;
+            } else {
+                selling = selling*1 + getFloat(p).toFixed(2)*getFloat(v).toFixed(2)*1;
             }
         }
         
         return {
+            buying,
+            selling,
             trades,
             lastTrade,
             avgTrades:getAvgTrades( trades )
         };
     } else if (exchange === 'binance') {
-        let trades = document.querySelectorAll('.cbahSo .ReactVirtualized__Table__row');
-        if (empty(trades)) trades = document.querySelectorAll('.diKEnC .ReactVirtualized__Table__row');
+        let trades = document.querySelectorAll('.list-container.css-6brvd3 .List_list-item-container__19z1k');
+        let buying=0;
+        let selling=0;
         for (let i in trades) {
+            if (isNaN(i)) continue;
             let t = trades[i];
-            if (typeof t === 'object') {
-            	if (i==0) {
-		            lastTrade = {
-		                price: t.children[0].innerText,
-		                volume: (getFloat(t.children[1].innerText) * getFloat(t.children[0].innerText)).toFixed(8),
-		                time: t.children[2].innerText
-		            };
-            	}
-                let p = t.children[0].innerText;
-                let v = (getFloat(t.children[1].innerText) * getFloat(t.children[0].innerText)).toFixed(8);
-                let T = t.children[2].innerText;
+            if (i==0) {
+                lastTrade = {
+                    price: t.children[0].children[0].innerText,
+                    volume: (getFloat(t.children[0].children[1].innerText) * getFloat(t.children[0].innerText)).toFixed(8),
+                    time: t.children[0].children[2].innerText
+                };
+            }
+            let p = t.children[0].children[0].innerText;
+            let v = (getFloat(t.children[0].children[1].innerText) * getFloat(t.children[0].children[0].innerText)).toFixed(8);
+            let T = t.children[0].children[2].innerText;
 
-                if (v > minVol) {
-                    allP.push(getFloat(p));
-                    allV.push(getFloat(v));
-                    allT.push(T);
-                }
+            if (v > minVol) {
+                allP.push(getFloat(p));
+                allV.push(getFloat(v));
+                allT.push(T);
+            }
+
+            if (t.children[0].classList[2] == 'trade-list-item-buy') {
+                buying = buying*1 + getFloat(p).toFixed(2)*getFloat(v).toFixed(2)*1;
+            } else {
+                selling = selling*1 + getFloat(p).toFixed(2)*getFloat(v).toFixed(2)*1;
             }
         }
 
         return {
+            buying,
+            selling,
             trades,
             lastTrade,
             avgTrades:getAvgTrades( trades )
@@ -482,7 +501,7 @@ function getExSymbol() {
 
     if (!validateTradeUrl()) return false;
 
-    if (exchange === 'hbg') {
+    if (exchange === 'huobi') {
         return document.querySelector('.symbol-name').innerText.trim();
     } else if (exchange === 'binance') {
         let _currencyCode = document.querySelectorAll('[property="og:title"]');
@@ -502,7 +521,7 @@ function getMinBuyVolume() {
 
     if (!validateTradeUrl()) return false;
 
-    if (exchange === 'hbg' || exchange === 'binance' || exchange === 'zb') {
+    if (exchange === 'huobi' || exchange === 'binance' || exchange === 'zb') {
         let base = getExBase();
         return base === 'BTC' ? 0.001 : (base === 'ETH') ? 0.03 : 10;
     } else {
@@ -515,7 +534,7 @@ function getExBase() {
 
     if (!validateTradeUrl()) return false;
 
-    if (exchange === 'hbg' || exchange === 'binance' || exchange === 'zb') {
+    if (exchange === 'huobi' || exchange === 'binance' || exchange === 'zb') {
         let code = getExSymbol();
         let ___symbols = code.split('/');
         if (Array.isArray(___symbols) && ___symbols[1]) { return ___symbols[1]; }
@@ -532,7 +551,7 @@ function checkExLoaded() {
 
     if (!validateTradeUrl()) return false;
 
-    if (exchange === 'hbg') {
+    if (exchange === 'huobi') {
         return getExPrice() && '---/---' !== getExSymbol();
     } else if (exchange === 'binance') {
         return getExPrice();

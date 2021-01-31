@@ -170,10 +170,35 @@ function getUrl() {
     return window.location.href;
 }
 
+const cookie_prefix = 'uaslknf9823rn2f94b329_';
+function setCookie(name,value,days) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days*24*60*60*1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = cookie_prefix + name + "=" + (value || "")  + expires + "; path=/";
+}
+function getCookie(name) {
+    var nameEQ = cookie_prefix + name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+
+function deleteCookie(name) {
+    document.cookie = cookie_prefix + name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+
 function getExchangeName() {
     let url = getUrl();
-    if (!empty(url) && url.find('https://www.hbg.com')) {
-        return 'hbg';
+    if (!empty(url) && url.find('https://www.huobi.com')) {
+        return 'huobi';
     } else if (!empty(url) && url.find('https://www.binance.com')) {
         return 'binance';
     } else if (!empty(url) && (url.find('https://web.zb.com/') || url.find('https://web.zb.cn/') || url.find('https://www.zb.com/'))) {
@@ -262,6 +287,21 @@ function myWrapper() {
         document.onmouseup = myDrop;
 
     }
+}
+
+// Get the immediate text (ie not that of children) of element
+function getImmediateText(element){
+    var text = '';
+
+    // Text and elements are all DOM nodes. We can grab the lot of immediate descendants and cycle through them.
+    for(var i = 0, l = element.childNodes.length, node; i < l, node = element.childNodes[i]; ++i){
+        // nodeType 3 is text
+        if(node.nodeType === 3){
+            text += node.nodeValue;
+        }
+    }
+
+    return text;
 }
 
 /**

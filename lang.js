@@ -26,6 +26,9 @@ const languages = {
             'Last': 'Last',
             'Change': 'Change',
             'Improve': 'Improve',
+            'Selling': 'Selling',
+            'Buying': 'Buying',
+            'Depth': 'Depth',
             'Trades': 'Trades',
             'Help Us to Improve': 'Help Us to Improve',
             'WorkingOn': 'We are working fast to give you the best trading tool ever made for huobi global. Our goal is to bring you a unified tool through web and mobile apps that detect early the pump and dump\'s cryptos',
@@ -61,7 +64,7 @@ const languages = {
             'Make a donation': '请告诉我们您如何在我们的 <a href="https://github.com/yosietserga" target="_blank">Github Repos</a>. 中改进浏览器扩展和移动应用程序的建议. 你也可以捐款'
         }
     },
-    'hbg': {
+    'huobi': {
         'en-us': {
             'Time Interval': 'Time Interval',
             'Price Change': 'Price Change',
@@ -86,6 +89,9 @@ const languages = {
             'Last': 'Last',
             'Change': 'Change',
             'Improve': 'Improve',
+            'Selling': 'Selling',
+            'Buying': 'Buying',
+            'Depth': 'Depth',
             'Trades': 'Trades',
             'Help Us to Improve': 'Help Us to Improve',
             'WorkingOn': 'We are working fast to give you the best trading tool ever made for huobi global. Our goal is to bring you a unified tool through web and mobile apps that detect early the pump and dump\'s cryptos',
@@ -376,6 +382,9 @@ const languages = {
             'Last': 'Ultimo',
             'Change': 'Cambio',
             'Improve': 'Mejorar',
+            'Selling': 'Vendiendo',
+            'Buying': 'Comprando',
+            'Depth': 'Profundidad',
             'Trades': 'Transacciones',
             'Help Us to Improve': 'Ay&uacute;danos a Mejorar',
             'WorkingOn': 'Estamos trabajando rápido para ofrecerle la mejor herramienta comercial jamás creada para huobi global. Nuestro objetivo es ofrecerle una herramienta unificada a través de aplicaciones web y móviles que detectan a tiempo las subidas y bajadas de las cryptos.',
@@ -436,6 +445,9 @@ const languages = {
             'Last': 'Last',
             'Change': 'Change',
             'Improve': 'Improve',
+            'Selling': 'Selling',
+            'Buying': 'Buying',
+            'Depth': 'Depth',
             'Trades': 'Trades',
             'Help Us to Improve': 'Help Us to Improve',
             'WorkingOn': 'We are working fast to give you the best trading tool ever made for huobi global. Our goal is to bring you a unified tool through web and mobile apps that detect early the pump and dump\'s cryptos',
@@ -668,6 +680,9 @@ const languages = {
             'Last': 'Ultimo',
             'Change': 'Cambio',
             'Improve': 'Mejorar',
+            'Selling': 'Vendiendo',
+            'Buying': 'Comprando',
+            'Depth': 'Profundidad',
             'Trades': 'Transacciones',
             'Help Us to Improve': 'Ay&uacute;danos a Mejorar',
             'WorkingOn': 'Estamos trabajando rápido para ofrecerle la mejor herramienta comercial jamás creada para huobi global. Nuestro objetivo es ofrecerle una herramienta unificada a través de aplicaciones web y móviles que detectan a tiempo las subidas y bajadas de las cryptos.',
@@ -709,7 +724,7 @@ const exchange = getExchangeName();
 const url = getUrl();
 let __langs, defaultLang, __hl;
 
-if (exchange == 'hbg') {
+if (exchange == 'huobi') {
       __langs = ['en-us', 'th-th', 'tr-tr', 'vi-vi', 'pt-br', 'pt-pt', 'fr-fr', 'de-de', 'ko-kr', 'ru-ru', 'es-es', 'zh-cn'];
       defaultLang = 'zh-cn';
       __hl = isset(localStorage.lang) && !empty(localStorage.lang) && __langs.indexOf( localStorage.lang ) != -1 ? localStorage.lang : null;

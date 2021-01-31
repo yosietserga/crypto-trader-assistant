@@ -35,7 +35,7 @@ function buymeabeer() {
 
         const addAddress = (symbol, address, tag = null) => {
             appendToMyWrapper(
-                '<div style="display:block;width:700px;height:30px;">' +
+                '<div style="display:block;width:100%;height:30px;">' +
                 '<h2 style="float:left;font-weight:bold;width:50px;padding:5px 10px;">' + symbol + '</h2>' +
                 '<p style="float:left;width:350px;padding:5px 10px;">' + address + '</p>' +
                 '<input style="' + styleHidden + '" type="text" value="' + address + '" id="donate' + symbol + 'Address" />' +
@@ -68,13 +68,9 @@ function buymeabeer() {
             }
         }
 
-        addAddress('BTC', '1FgpJpTHDuBgSe1CrTQE6HYR1xSJDn6ZsM');
-        addAddress('DASH', 'XsLzYmqeDmW135a8kXU5ALS4M3B3gREyJ6');
-        addAddress('ETH', '0x0A34857AC57976846D62F58E68bfB2B5eb9e6732');
-        addAddress('LTC', 'LdQB3fPacYpZBGGg7QDsaqiY31E5g5RQyn');
-        addAddress('BCH', '1AaZbaKhcFvpzks3UKjyECnUzNLf4NS5hu');
-        addAddress('BTG', 'GJ8vC45q7CqgtsV9pkdAwbXhpFYx5A2SRt');
-        addAddress('XRP', 'rKfzfrk1RsUxWmHimWyNwk8AoWHoFneu4m', '1970342557');
+        addAddress('BTC', '1G7kX3WNX72PmjvGhxZL1XUA9CtdPMbA98');
+        addAddress('ETH', '0x13bf6c527c19041fc6c099fa760e8fc6924f8dee');
+        addAddress('XRP', 'rf7qtfHTAGrkxfDfZFmD4kKJaT4otefgo3', '101238');
 
         document.getElementById("hideShowButton").onclick = slideToggle;
     }
@@ -128,7 +124,7 @@ function bindDashboardBTCTpl() {
     document.querySelector('[data-sorting="volumeDiffProgressive"]').onclick = () => {
         sortOrderTpl('volumeDiffProgressive', true);
     };
-    document.getElementById("refreshButton").addEventListener("click", refresh);
+    document.getElementById("refreshButton").addEventListener("click", () => { refresh() });
 }
 
 function initConfig(settings) {
@@ -152,13 +148,13 @@ function initTraderAssistantBTCTpl(s) {
 
     appendToMyWrapper('<div style="color:[avgDumpColor];text-align:center;">' +
         '<hr />' + lang['Calculator'] + '<br />' +
-        '<input style="border:solid 1px #000;background:#111;width:99%;display:block;" type="percent" name="percentProfit" placeholder="percent" step="0.1" value="' + s.percentProfit + '%" />'
+        '<input style="border:solid 1px #000;background:#111;width:99%;display:block;color:#fff !important;" type="percent" name="percentProfit" placeholder="percent" step="0.1" value="' + s.percentProfit + '%" />'
 
         +
-        '<input style="border:solid 1px #000;background:#111;width:99%;display:block;" type="number" name="priceBuyBTC" placeholder="' + lang['Buy'] + ' ' + lang['Price'] + '" step="0.00000001" />'
+        '<input style="border:solid 1px #000;background:#111;width:99%;display:block;color:#fff !important;" type="number" name="priceBuyBTC" placeholder="' + lang['Buy'] + ' ' + lang['Price'] + '" step="0.00000001" />'
 
         +
-        '<input style="border:solid 1px #000;background:#111;width:99%;display:block;" type="number" name="priceSellBTC"  placeholder="' + lang['Sell'] + ' ' + lang['Price'] + '" step="0.00000001" />'
+        '<input style="border:solid 1px #000;background:#111;width:99%;display:block;color:#fff !important;" type="number" name="priceSellBTC"  placeholder="' + lang['Sell'] + ' ' + lang['Price'] + '" step="0.00000001" />'
 
         +
         '<hr />' +
@@ -184,9 +180,9 @@ function runRichMaker(e) {
         let base = getBase();
         settings = {
             interval: 1,
-            percentProfit: 4,
-            occurrences: 10,
-            progreesive: false,
+            percentProfit: 2,
+            occurrences: 20,
+            progressive: false,
             dumpColor: 'rgba(244, 65, 65, 1)',
             pumpColor: 'rgba(66, 244, 146,1)'
         };
@@ -204,10 +200,10 @@ function runRichMaker(e) {
             interval: 1,
             percentProfit: 4,
             quantity: 0.001,
-            progreesive: false,
+            progressive: false,
             buy_button: false,
             sell_button: false,
-            dumpColor: 'rgba(239, 0, 0, 1)',
+            dumpColor: 'rgb(239,0,0)',
             pumpColor: 'rgba(65, 244, 181, 1)',
         };
 
@@ -252,7 +248,7 @@ function tradingAssistantBTC() {
         let percent = getExPercent();
         let vol = getExVolume();
         let volumeBTC = getExVolumeQuoted();
-        const { trades, lastTrade, avgTrades } = getExTrades();
+        const { buying, selling, trades, lastTrade, avgTrades } = getExTrades();
 
         addChange({
             id: generateId(),
@@ -324,6 +320,8 @@ function tradingAssistantBTC() {
                 volPercentDiff: volPercentChange,
                 volDiff: volChange,
                 lastTrade: lastTrade,
+                buying,
+                selling,
                 avgTrades: avgTrades,
                 avg: getAVGChanges(code)
             });
@@ -338,6 +336,26 @@ function tradingAssistantBTC() {
 function tradingAssistantBTCTpl(data) {
     var pumping = document.getElementById(data.domId);
     var codeId = '';
+
+    const formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 2
+    });
+
+    if (getExchangeName()=='huobi') {
+
+        var volumenTotal = getFloat(data.volumeBTC * data.priceBTC * 1).toFixed(2);
+        var volumeLetter = (volumenTotal > 1000000)
+            ? 'M'
+            : (volumenTotal > 1000) ? 'K' : '';
+
+        var totalVolume = (volumeLetter == 'M') ? getFloat(volumenTotal / 1000000).toFixed(2) : (volumeLetter == 'K') ? getFloat(volumenTotal / 1000).toFixed(2) : getFloat(volumenTotal).toFixed(2);
+        totalVolume += volumeLetter;
+    } else {
+        var totalVolume = data.volumeBTC;
+
+    }
 
     let tm = '';
     if (data.avgTrades.time > 60) {
@@ -383,7 +401,7 @@ function tradingAssistantBTCTpl(data) {
         '<div style="text-align:center;font-size:16px;">' + lang['Volume'] + ' ' + data.base + '</div>' +
         '<div style="text-align:center;font-size:14px;">24H ' + lang['Change'] + '</div>' +
         '<div style="text-align:center;color:[dumpColor]">' +
-        '<small style="text-align:center;font-size:10px;">' + getFloat(data.volumeBTC) + ' (%' + data.volPercentDiff + ')</small>' +
+        '<small style="text-align:center;font-size:10px;">$' + totalVolume + ' (%' + data.volPercentDiff + ')</small>' +
         '</div>'
 
         +
@@ -392,7 +410,22 @@ function tradingAssistantBTCTpl(data) {
         +
         '<div style="text-align:center;font-size:14px;">' + lang['Since Opened'] + '</div>' +
         '<div style="text-align:center;color:[dumpColor]">' +
-        '<small style="text-align:center;font-size:10px;">' + getFloat(data.volDiff) + ' (%' + data.volPercentDiff + ')</small>' +
+        '<small style="text-align:center;font-size:10px;">' + formatter.format(getFloat(data.volDiff * data.priceBTC * 1).toFixed(2)) + ' (%' + data.volPercentDiff + ')</small>' +
+        '</div>'
+
+        +
+        '<br />'
+
+        +
+        '<div style="text-align:center;font-size:14px;">' + lang['Depth'] + '</div>' +
+        '<div style="text-align:center;font-size:9px;">' + lang['Buying'] + (data.buying>=data.selling?' ***':'') +'</div>' +
+        '<div style="text-align:center;color:[dumpColor]">' +
+        '<small style="text-align:center;font-size:10px;">' + formatter.format(getFloat(data.buying).toFixed(2)) +'</small>' +
+        '</div>'+
+
+        '<div style="text-align:center;font-size:9px;">' + lang['Selling'] + (data.buying<data.selling?' ***':'') +'</div>' +
+        '<div style="text-align:center;color:[dumpColor]">' +
+        '<small style="text-align:center;font-size:10px;">' + formatter.format(getFloat(data.selling).toFixed(2)) +'</small>' +
         '</div>'
 
         +
@@ -931,7 +964,7 @@ function walkCurrencies(base = 'btc') {
             percent,
             volume
         } = getRowData(row);
-        
+        if (firstRun && getFloat(priceBTC) == 0) return;
         if (firstRun && !pLast[code]) {
             pLast[code] = pLast[code] || {};
         }
