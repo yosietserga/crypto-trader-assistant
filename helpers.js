@@ -166,6 +166,21 @@ function del(key, subkey = null) {
     }
 }
 
+function doRequest(url, type, cb) {
+    if (typeof url == 'undefined') return;
+    if (typeof type == 'undefined') type = 'GET';
+    
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200 && typeof cb == 'function') {
+            cb(this.responseText, this);
+        }
+    };
+
+   xhttp.open(type, url, true);
+   xhttp.send();
+}
+
 function getUrl() {
     return window.location.href;
 }

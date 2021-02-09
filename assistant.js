@@ -83,17 +83,19 @@ bindEventsRichMaker();
 function initDashboardBTCTpl(s) {
     myWrapper();
     appendToMyWrapper(
+        '<p class="monitorLoaded">OpenTab <input type="checkbox" name="openTab" value="1" checked="1" /></p>' +
         '<p class="monitorLoaded">' + lang['Time Interval'] + ': ' + s.interval + ' seconds</p>' +
         '<p>' + lang['Price Change'] + ' ' + lang['Min'] + ': ' + s.percentProfit + '%</p>' +
         '<a href="' + getWithdrawalUrl() + '" target="_blank" style="font-size:12px;color:#fff;background:rgba(66, 244, 146,1);padding:5px;margin:10px;border:none;cursor:pointer;position:absolute;right:100px;text-transform:uppercase;line-height:16px;top:10px;">' + lang['Improve'] + '</a>' +
         '<button id="refreshButton" style="font-size:12px;color:#fff;background:#ffd170;padding:5px;margin:10px;border:none;cursor:pointer;position:absolute;right:10px;text-transform:uppercase;line-height:16px;top:10px;">' + lang['Refresh'] + '</button>' +
+        '<button onclick="clearModa()" style="font-size:12px;color:#fff;background:#ffd170;padding:5px;margin:10px;border:none;cursor:pointer;position:absolute;right:250px;text-transform:uppercase;line-height:16px;top:10px;">Clear Moda</button>' +
         '<div style="clear:both;float:none;width:100%;height:1px;display:block;border:solid 1px #000;"></div>'
     );
 
     appendToMyWrapper(
         '<div style="float:left;width:50px;">&nbsp;</div>' +
 
-        '<div style="font-size:12px;float:left;width:100px;text-align:center;">' + lang['Currency'] + '</div>' +
+        '<div style="font-size:12px;float:left;width:150px;text-align:center;">' + lang['Currency'] + '</div>' +
 
         '<div data-sorting="change" style="font-size:12px;cursor:pointer;float:left;width:80px;text-align:center;">' + lang['Price Change'] + ' %</div>' +
 
@@ -601,6 +603,12 @@ function refresh(c = null) {
     }
 }
 
+var __moda = {};
+
+function clearModa() {
+    __moda = {};
+}
+
 async function makeMeRichBTC() {
     let base = getBase();
 
@@ -617,6 +625,9 @@ async function makeMeRichBTC() {
                 if (typeof __cData[code].occurrences == 'undefined') __cData[code].occurrences = 0;
                 __cData[code].occurrences++;
                 if (last.percentDiff >= actual.percentProfit && __cData[code].occurrences >= settings.occurrences) {
+                    if (typeof __moda[code] == 'undefined') __moda[code] = 1;
+                    else __moda[code] = __moda[code]*1 + 1*1;
+
                     __cData[code].occurrences = 0;
                     openTab(code);
                 }
@@ -635,6 +646,8 @@ async function makeMeRichBTC() {
 
                     priceSellBTC: actual.priceSellBTC,
                     priceSellUSD: actual.priceSellUSD,
+
+                    moda:(typeof __moda[code] == 'undefined'?0:__moda[code]),
 
                     avg: getAVGChanges(actual.code),
                     volumeBTC: actual.volumeBTC,
@@ -655,10 +668,10 @@ function makeMeRichTplBTC(data) {
     let t = '<a style="float:left;width:50px;color: [dumpColor]" href="' + data.linkToTrade + '" target="_blank"> [TRADE] </a>'
 
         +
-        '<div style="float:left;width:100px;">' +
+        '<div style="float:left;width:150px;">' +
         '&nbsp;&nbsp;[symbol]&nbsp;&nbsp;' +
         data.code.replace(data.base, '/' + data.base).toUpperCase() +
-        '</div>'
+        ' ('+ data.moda +')</div>'
 
         +
         '<div style="float:left;width:80px;[bold]" data-change="' + data.percentDiff.toFixed(2) + '">' +
@@ -790,7 +803,7 @@ function makeMeRichTplBTC(data) {
 
 function openTab(code) {
     if (!get('tabs_opened')) set('tabs_opened', {});
-
+    if (!document.querySelector('input[name=openTab]').checked) return false; 
     let url = getTradeUrl(code);
     let tabs_opened = get('tabs_opened');
     let config_max_tabs_opened = get('config_max_tabs_opened');
